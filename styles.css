@@ -1,0 +1,769 @@
+/* Techflow Solutions - landing
+   Palette derived from the client's brand deck (navy + periwinkle).
+   Theme: light throughout. Navy is the brand anchor used for structural
+   bands (hero panel, callout, CTA, footer, table head), not a theme flip. */
+
+:root {
+  --navy:        #182a63;
+  --navy-deep:   #0f1c46;
+  --navy-700:    #24387e;
+  --peri:        #93a6d4;
+  --peri-soft:   #c4cfe8;
+  --peri-bg:     #e9edf7;
+
+  --paper:       #f4f6fb;
+  --surface:     #ffffff;
+  --surface-2:   #fafbfe;
+
+  --ink:         #161a2c;
+  --ink-2:       #454b64;
+  --ink-3:       #6c7289;
+
+  --line:        #e2e6f1;
+  --line-strong: #ccd3e6;
+
+  --accent:      #2f55e0;
+  --accent-ink:  #1f3fb8;
+
+  --r-sm: 10px;
+  --r:    14px;
+  --r-lg: 22px;
+
+  --wrap: 1200px;
+  --pad: clamp(20px, 5vw, 40px);
+
+  --ease:    cubic-bezier(.23, 1, .32, 1);
+  --ease-io: cubic-bezier(.77, 0, .175, 1);
+
+  --header-h: 68px;
+
+  color-scheme: light;
+}
+
+/* ---------- reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  /* anchors stop below the sticky header instead of under it */
+  scroll-padding-top: calc(var(--header-h) + 12px);
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  position: relative;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Onest", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.14; letter-spacing: -0.02em; color: var(--ink); overflow-wrap: break-word; }
+h1 { font-size: clamp(1.95rem, 1.15rem + 3.4vw, 3.1rem); }
+h2 { font-size: clamp(1.7rem, 1.2rem + 2.1vw, 2.5rem); letter-spacing: -0.022em; }
+h3 { font-size: 1.12rem; letter-spacing: -0.01em; }
+p  { margin: 0; }
+a  { color: inherit; text-decoration: none; }
+img, svg, iframe { display: block; max-width: 100%; }
+button { font: inherit; cursor: pointer; }
+
+::selection { background: var(--navy); color: #fff; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.skip-link {
+  position: fixed; top: 10px; left: 10px; z-index: 200;
+  background: var(--navy); color: #fff; padding: 10px 16px; border-radius: var(--r-sm);
+  transform: translateY(-160%);
+  transition: transform .2s var(--ease);
+}
+.skip-link:focus { transform: none; }
+
+.wrap { width: 100%; max-width: var(--wrap); margin-inline: auto; padding-inline: var(--pad); }
+
+/* ---------- buttons ---------- */
+.btn {
+  --btn-bg: var(--navy);
+  --btn-fg: #fff;
+  display: inline-flex; align-items: center; gap: .5em;
+  padding: 13px 22px;
+  background: var(--btn-bg); color: var(--btn-fg);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-weight: 500; font-size: .98rem; white-space: nowrap;
+  transition: transform .16s var(--ease), background-color .18s ease, border-color .18s ease, color .18s ease;
+}
+.btn i { font-size: 1.05em; }
+.btn:active { transform: scale(.97); }
+.btn--sm { padding: 10px 18px; font-size: .92rem; }
+
+.btn--primary { --btn-bg: var(--navy); --btn-fg:#fff; }
+.btn--ghost {
+  --btn-bg: transparent; --btn-fg: var(--navy);
+  border-color: var(--line-strong);
+}
+.btn--light { --btn-bg:#fff; --btn-fg: var(--navy); }
+
+@media (hover: hover) {
+  .btn--primary:hover { background: var(--navy-700); }
+  .btn--ghost:hover { border-color: var(--navy); background: rgba(24,42,99,.04); }
+  .btn--light:hover { background: var(--peri-bg); }
+}
+
+/* ---------- header ---------- */
+/* Opaque, with no backdrop-filter. A backdrop-filter makes the bar's own paint
+   depend on whatever is behind it, and the concrete pour runs the length of the
+   page as a single layer whose mask changes on every scrolled frame, which made
+   the header rasterise wrong until the pour reached the footer and settled.
+   The bar was 82% opaque anyway, and at the top of the page there is nothing
+   behind it to blur, so this costs the design nothing. */
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  min-height: var(--header-h);   /* the bar can never render shorter than this */
+  background: var(--paper);
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s ease, background-color .2s ease;
+}
+.site-header.scrolled {
+  background: #fff;
+  border-bottom-color: var(--line);
+}
+.site-header__inner {
+  display: flex; align-items: center; gap: 24px;
+  height: var(--header-h);
+}
+
+.logo { display: inline-flex; align-items: center; gap: 10px; color: var(--navy); }
+.logo__mark { width: 30px; height: auto; color: var(--peri); flex: none; }
+.logo__text { display: flex; flex-direction: column; line-height: 1; }
+.logo__name {
+  font-family: "Fredoka", "Onest", sans-serif;
+  font-weight: 500; font-size: 1.28rem; letter-spacing: -0.01em; color: var(--navy);
+}
+.logo__sub {
+  font-family: "Fredoka", "Onest", sans-serif;
+  font-weight: 400; font-size: .62rem; letter-spacing: .34em; text-transform: lowercase;
+  color: var(--peri); margin-top: 3px; padding-left: 2px;
+}
+
+.nav { display: flex; gap: 28px; margin-inline: auto; }
+.nav a {
+  font-size: .95rem; color: var(--ink-2); padding: 6px 0; position: relative;
+  transition: color .16s ease;
+}
+.nav a::after {
+  content: ""; position: absolute; left: 0; right: 100%; bottom: 0; height: 2px;
+  background: var(--accent); border-radius: 2px;
+  transition: right .22s var(--ease);
+}
+@media (hover: hover) {
+  .nav a:hover { color: var(--ink); }
+  .nav a:hover::after { right: 0; }
+}
+.nav a.is-active { color: var(--ink); }
+.nav a.is-active::after { right: 0; }
+
+.site-header__actions { display: flex; align-items: center; gap: 18px; }
+.header-phone {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: .9rem; color: var(--ink-2); letter-spacing: -0.01em;
+  transition: color .16s ease;
+}
+@media (hover: hover) { .header-phone:hover { color: var(--navy); } }
+
+.burger {
+  display: none;
+  background: none; border: 1px solid var(--line-strong); border-radius: var(--r-sm);
+  width: 42px; height: 42px; color: var(--navy);
+  align-items: center; justify-content: center;
+}
+.burger i { font-size: 1.5rem; }
+
+.mobile-nav {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 12px var(--pad) 22px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.mobile-nav a {
+  padding: 12px 4px; font-size: 1.05rem; color: var(--ink-2);
+  border-bottom: 1px solid var(--line);
+}
+.mobile-nav a:last-of-type { border-bottom: 0; }
+.mobile-nav .btn { margin-top: 12px; justify-content: center; }
+.mobile-nav__phone {
+  font-family: "JetBrains Mono", monospace; font-size: .95rem; text-align: center;
+  color: var(--navy) !important; border-bottom: 0 !important;
+}
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: min(90vh, 780px);
+  background: var(--navy-deep);
+  overflow: hidden;
+}
+.hero__bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
+.hero__bg img {
+  width: 100%; height: 100%; object-fit: cover; object-position: 50% 52%;
+  transform-origin: center;
+  transform: scale(1.24) translate(3%, -2%);
+}
+.hero__bg::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(102deg, rgba(11,19,50,.90) 0%, rgba(11,19,50,.66) 40%, rgba(11,19,50,.24) 72%, rgba(11,19,50,.08) 100%),
+    linear-gradient(0deg, rgba(11,19,50,.58) 0%, rgba(11,19,50,0) 46%);
+}
+.hero__inner { padding-block: clamp(56px, 12vh, 132px); }
+.hero__body { max-width: 42rem; }
+.hero h1 { margin-bottom: 22px; color: #fff; text-wrap: pretty; }
+.hero__lead {
+  font-size: 1.14rem; color: rgba(255,255,255,.84); max-width: 48ch; margin-bottom: 32px;
+  text-wrap: pretty;
+}
+.hero__cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn--on-dark { --btn-fg: #fff; border-color: rgba(255,255,255,.45); }
+@media (hover: hover) {
+  .btn--on-dark:hover { border-color: #fff; background: rgba(255,255,255,.1); }
+}
+
+/* ---------- stats ---------- */
+/* extra headroom above the hairline so the mixer has somewhere to stand */
+.stats-band { background: var(--paper); padding: clamp(40px, 8vw, 104px) 0 clamp(40px, 7vw, 76px); }
+/* the hairline is drawn, not bordered: a border box is snapped to the device
+   grid on its own, so on a 125% / 150% display it lands a fraction of a pixel
+   away from the gutter line next to it and the two show a seam. Both halves
+   are the same kind of absolutely positioned 1px box at top:0 instead, so they
+   always round to the same device row. padding-top replaces the border's 1px. */
+.stats {
+  margin: 0;
+  position: relative;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  padding-top: 1px;
+}
+.stats::before {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: var(--line-strong);
+}
+.stats__item { padding: 26px 24px 4px 0; border-right: 1px solid var(--line); }
+/* nth-child(4), not last-child: the road and the mixer are children too */
+.stats__item:nth-child(4) { border-right: 0; }
+
+/* the hairline continued into the left gutter, plus the mixer standing on it.
+   Both are positioned against this block's own border, so they travel with it
+   through the reveal animation, zooming and late font loads. JS only decides
+   whether there is gutter enough to show them, and how wide the truck is. */
+.stats__road, .stats__rig { display: none; }
+.stats--road .stats__road, .stats--road .stats__rig { display: block; }
+
+.stats__road {
+  position: absolute;
+  top: 0;               /* same origin as ::before, so they read as one line */
+  right: 100%;
+  width: var(--road-l, 0);
+  height: 1px;
+  background: var(--line-strong);
+}
+/* the same run of road in the right margin, so the line is not lopsided */
+.stats__road--r {
+  right: auto;
+  left: 100%;
+  width: var(--road-r, 0);
+}
+.stats__rig {
+  position: absolute;
+  bottom: 100%;                          /* wheels rest on top of the hairline */
+  right: calc(100% + var(--rig-gap, 0px));
+  width: var(--rig-w, 140px);
+  font-size: 0; line-height: 0;
+  opacity: .72;
+  pointer-events: none;
+}
+.mixer {
+  display: block; width: 100%; height: auto; overflow: visible;
+  aspect-ratio: 210 / 97.5;          /* height never depends on load order */
+  transform: scaleX(-1);             /* cab to the right, chute to the left */
+}
+.stats dt {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1.5rem; font-weight: 500; color: var(--navy); letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.stats dd { margin: 0; font-size: .96rem; color: var(--ink-3); max-width: 26ch; }
+
+/* ---------- sections ---------- */
+.section { padding: clamp(64px, 11vw, 132px) 0; }
+.section--tint { background: var(--surface); border-block: 1px solid var(--line); }
+
+.eyebrow {
+  font-size: .72rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 18px;
+}
+.lead { font-size: 1.1rem; color: var(--ink-2); max-width: 60ch; }
+
+/* about */
+.about__grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 6vw, 80px);
+  align-items: start;
+}
+.about__head h2 { margin-bottom: 20px; max-width: 20ch; }
+.about__list { display: flex; flex-direction: column; }
+.feature-row { padding: 24px 0; border-top: 1px solid var(--line); }
+.feature-row:first-child { padding-top: 4px; border-top: 0; }
+.feature-row h3 { margin-bottom: 8px; }
+.feature-row p { color: var(--ink-2); font-size: .98rem; max-width: 44ch; }
+
+.callout {
+  margin-top: clamp(36px, 6vw, 64px);
+  display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center;
+  background: linear-gradient(150deg, var(--navy) 0%, var(--navy-deep) 100%);
+  color: #fff;
+  border-radius: var(--r-lg);
+  padding: clamp(28px, 5vw, 44px);
+}
+.callout__mark { color: var(--peri); }
+.callout__mark svg { width: 68px; height: auto; }
+.callout h3 { color: #fff; font-size: 1.3rem; margin-bottom: 10px; }
+.callout p { color: var(--peri-soft); max-width: 62ch; }
+
+/* advantages */
+.compare {
+  margin: clamp(32px, 6vw, 56px) 0 clamp(44px, 8vw, 76px);
+  border-top: 1px solid var(--line-strong);
+}
+.compare__row {
+  display: grid; grid-template-columns: 64px 1fr 1fr; gap: 24px; align-items: baseline;
+  padding: 26px 0; border-bottom: 1px solid var(--line);
+}
+.compare__idx {
+  font-family: "JetBrains Mono", monospace; font-size: 1.5rem; color: var(--peri);
+  font-weight: 500;
+}
+.compare__main h3 { font-size: 1.24rem; }
+.compare__note { color: var(--ink-3); font-size: .98rem; }
+
+.benefits {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+  background: var(--line); border: 1px solid var(--line); border-radius: var(--r);
+  overflow: hidden;
+}
+.benefit { background: var(--surface); padding: clamp(24px, 4vw, 38px); }
+.section:not(.section--tint) .benefit { background: var(--surface); }
+.benefit i {
+  font-size: 1.7rem; color: var(--accent); display: block; margin-bottom: 16px;
+}
+.benefit h3 { margin-bottom: 10px; }
+.benefit p { color: var(--ink-2); font-size: .96rem; }
+
+/* products / matrix */
+.legend {
+  list-style: none; margin: 26px 0 22px; padding: 0;
+  display: flex; flex-wrap: wrap; gap: 10px 26px;
+  font-size: .86rem; color: var(--ink-2);
+}
+.legend li { display: flex; align-items: center; gap: 10px; }
+
+.meter { display: inline-flex; gap: 3px; }
+.meter i {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong);
+}
+.meter[data-level="1"] i:nth-child(-n+1),
+.meter[data-level="2"] i:nth-child(-n+2),
+.meter[data-level="3"] i:nth-child(-n+3) { background: var(--accent); }
+.meter[data-level="0"] i { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line-strong); }
+
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  -webkit-overflow-scrolling: touch;
+}
+.matrix {
+  width: 100%; border-collapse: collapse; min-width: 620px;
+  font-size: .94rem;
+}
+.matrix thead th {
+  background: var(--navy); color: #fff; font-weight: 500;
+  text-align: center; padding: 16px 14px; font-size: .84rem;
+}
+.matrix thead th:first-child { text-align: left; }
+.matrix tbody th[scope="row"] {
+  text-align: left; font-weight: 500; white-space: nowrap;
+  font-family: "JetBrains Mono", monospace; font-size: .86rem; color: var(--ink);
+  padding: 14px 18px 14px 20px;
+  position: sticky; left: 0; background: var(--surface);
+}
+.matrix td { text-align: center; padding: 14px; }
+.matrix tbody tr:not(.matrix__group) { border-top: 1px solid var(--line); }
+
+.matrix__group th {
+  background: var(--peri-bg); color: var(--navy);
+  font-family: "Onest", sans-serif; font-weight: 600; font-size: .78rem;
+  letter-spacing: .06em; text-transform: uppercase;
+  text-align: left; padding: 12px 20px;
+}
+/* The group cell spans the whole table, so pinning the cell would do nothing:
+   its text would still ride off to the left. The label itself is pinned
+   instead, at the same 20px inset as the product names below it, so the two
+   stay in one column while the table is scrolled sideways. */
+.matrix__group th > span {
+  position: sticky; left: 20px;
+  display: inline-block;
+}
+.matrix td::before {
+  content: ""; display: inline-block; vertical-align: middle;
+}
+.matrix td[data-l="3"]::before { content: "\25CF\2009\25CF\2009\25CF"; color: var(--accent); letter-spacing: 1px; font-size: .7rem; }
+.matrix td[data-l="2"]::before { content: "\25CF\2009\25CF"; color: var(--accent); letter-spacing: 1px; font-size: .7rem; }
+.matrix td[data-l="1"]::before { content: "\25CF"; color: var(--accent); font-size: .7rem; }
+.matrix td[data-l="0"]::before { content: "\2013"; color: var(--ink-3); }
+
+.note {
+  margin-top: 22px; font-size: .96rem; color: var(--ink-3);
+  max-width: 74ch; padding-left: 16px; border-left: 2px solid var(--peri);
+}
+
+/* projects */
+.projects {
+  margin-top: clamp(32px, 6vw, 52px);
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(18px, 3vw, 30px);
+}
+.project {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.project img { width: 100%; height: 240px; object-fit: cover; }
+.project__body { padding: 22px 24px 26px; }
+.project__body h3 { margin-bottom: 4px; }
+.project__meta {
+  font-family: "JetBrains Mono", monospace; font-size: .82rem; color: var(--accent);
+  margin-bottom: 12px;
+}
+.project__body p:last-child { color: var(--ink-2); font-size: .93rem; }
+
+/* cta band */
+.cta-band {
+  background: linear-gradient(150deg, var(--navy) 0%, var(--navy-deep) 100%);
+  color: #fff;
+}
+.cta-band__inner {
+  padding-block: clamp(48px, 8vw, 88px);
+  display: grid; grid-template-columns: 1.3fr .7fr; gap: 40px; align-items: center;
+}
+.cta-band h2 { color: #fff; margin-bottom: 14px; max-width: 18ch; }
+.cta-band p { color: var(--peri-soft); max-width: 52ch; }
+.cta-band__actions { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+.cta-band__phone {
+  font-family: "JetBrains Mono", monospace; font-size: 1rem; color: #fff;
+  padding-left: 2px;
+}
+@media (hover: hover) { .cta-band__phone:hover { color: var(--peri-soft); } }
+
+/* contacts */
+.contacts__grid {
+  display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(32px, 6vw, 72px);
+  align-items: start;
+}
+.contacts__info h2 { margin-bottom: 26px; }
+.contact-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 22px; }
+.contact-list li { display: grid; grid-template-columns: 30px 1fr; gap: 14px; }
+.contact-list i { font-size: 1.25rem; color: var(--accent); margin-top: 2px; }
+.contact-list__label {
+  display: block; font-size: .76rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 6px;
+}
+.contact-list a { display: block; color: var(--ink); transition: color .16s ease; }
+.contact-list a + a { margin-top: 3px; }
+@media (hover: hover) { .contact-list a:hover { color: var(--accent); } }
+.contact-list .muted { color: var(--ink-3); }
+.contact-list p { color: var(--ink-2); }
+
+.contact-form {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
+  padding: clamp(24px, 4vw, 38px);
+  display: flex; flex-direction: column; gap: 18px;
+}
+.field { display: flex; flex-direction: column; gap: 7px; }
+.field label { font-size: .88rem; font-weight: 500; color: var(--ink-2); }
+.field label span { color: var(--accent); }
+.field input, .field textarea {
+  font: inherit; font-size: .98rem;
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  transition: border-color .16s ease, box-shadow .16s ease;
+  width: 100%;
+}
+.field textarea { resize: vertical; min-height: 96px; }
+.field input::placeholder, .field textarea::placeholder { color: var(--ink-3); }
+.field input:focus, .field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(47,85,224,.16);
+}
+.field input[aria-invalid="true"], .field textarea[aria-invalid="true"] {
+  border-color: #c0392b;
+}
+.field__error { color: #b02a1c; font-size: .84rem; }
+.field__hint { color: var(--ink-3); font-size: .84rem; }
+.form-status { font-size: .9rem; min-height: 1.2em; }
+.form-status.is-ok { color: var(--accent-ink); }
+.form-status.is-err { color: #b02a1c; }
+.contact-form .btn { align-self: flex-start; }
+
+.map {
+  position: relative;
+  margin-top: clamp(28px, 5vw, 48px);
+  border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden;
+  background: var(--peri-bg);
+  min-height: 320px;
+}
+.map__fallback {
+  position: absolute; inset: 0; z-index: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; text-align: center; padding: 32px;
+  color: var(--ink-2);
+}
+.map__fallback p { max-width: 34ch; }
+.map iframe { position: relative; z-index: 1; width: 100%; height: 340px; border: 0; filter: saturate(.9); }
+
+/* footer */
+.site-footer { background: var(--navy-deep); color: var(--peri-soft); }
+.site-footer__grid {
+  display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.2fr; gap: 40px;
+  padding-block: clamp(48px, 7vw, 80px) 40px;
+}
+.logo--footer { color: #fff; }
+.logo--footer .logo__mark { color: var(--peri); }
+.logo--footer .logo__name { color: #fff; }
+.logo--footer .logo__sub { color: var(--peri); }
+.site-footer__brand p { margin-top: 16px; font-size: .92rem; color: var(--peri-soft); max-width: 30ch; }
+.site-footer__col h3 { color: #fff; font-size: .82rem; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 16px; }
+.site-footer__col a { display: block; padding: 6px 0; font-size: .92rem; color: var(--peri-soft); transition: color .16s ease; }
+@media (hover: hover) { .site-footer__col a:hover { color: #fff; } }
+.site-footer__bottom {
+  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  padding-block: 22px 30px; border-top: 1px solid rgba(147,166,212,.18);
+  font-size: .84rem; color: var(--peri);
+}
+
+/* ---------- reveal / motion ----------
+   Entrances only, so everything is eased out: the movement is quickest at the
+   start, where the eye is. Only transform, opacity, clip-path and a short blur
+   are touched, and nothing ever starts from scale(0). The variants exist so
+   neighbouring blocks do not all arrive with the same upward nudge. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .55s var(--ease), transform .55s var(--ease),
+                -webkit-mask-size .75s var(--ease), mask-size .75s var(--ease);
+  }
+  .js .reveal.in { opacity: 1; transform: none; }
+
+  /* the two halves of a split layout come in from their own sides */
+  .js .reveal--left  { transform: translateX(-28px); }
+  .js .reveal--right { transform: translateX(28px); }
+
+  /* panels and cards settle down into place */
+  .js .reveal--rise { transform: translateY(32px) scale(.985); }
+
+  /* Images, tables and the map are wiped open from the top. Masked rather than
+     clipped: a clip-path collapsed to zero height also hides the element from
+     IntersectionObserver (measured: ratio 0, never intersecting), so the block
+     would never be told to appear and would stay invisible for good. A mask is
+     a paint effect, so the observer still sees the box at its full size. */
+  .js .reveal--wipe {
+    transform: none;
+    -webkit-mask-image: linear-gradient(#000, #000);
+    mask-image: linear-gradient(#000, #000);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 0%;
+    mask-size: 100% 0%;
+  }
+  .js .reveal--wipe.in {
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+
+  /* Headings grow into place from their left edge. This used to be a blur, but
+     every heading still below the fold then held a blur layer the compositor
+     had to keep around, which is a lot of cost for an effect nobody sees yet.
+     Transforms are free by comparison. */
+  .js .reveal--text { transform: translateY(10px) scale(.986); transform-origin: 0 50%; }
+
+  /* a cascade instead of a whole grid landing at once */
+  .js .stagger > *:nth-child(2) { transition-delay: 90ms; }
+  .js .stagger > *:nth-child(3) { transition-delay: 180ms; }
+  .js .stagger > *:nth-child(4) { transition-delay: 270ms; }
+  .js .stagger > *:nth-child(5) { transition-delay: 360ms; }
+  .js .stagger > *:nth-child(6) { transition-delay: 450ms; }
+
+  .hero__bg img {
+    animation: heroDrift 8s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+}
+
+/* Below this width the split layouts are stacked into one column, so there are
+   no sides left for a block to arrive from, and a block waiting 28px to the
+   right pokes out past the edge of the page and makes the document wider than
+   the window (measured: 492px of content in a 489px viewport). The browser
+   then fits that wider page into the window, which scales everything down,
+   including the header, until the last shifted block has appeared. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 1000px) {
+  .js .reveal--left,
+  .js .reveal--right { transform: translateY(18px); }
+}
+/* slow lateral drift from the right of the frame to the left,
+   easing out to a wider view — like banking away and gaining altitude */
+@keyframes heroDrift {
+  from { transform: scale(1.24) translate(3%, -2%); }
+  to   { transform: scale(1.10) translate(-3%, 2.2%); }
+}
+
+/* ---------- concrete pour ----------
+   A stream of concrete starts at the hairline above the stats block,
+   runs down the left gutter and pools into a puddle in the footer.
+   Top / height are set from JS (stats top -> footer bottom).
+   Only shown where the layout actually has a gutter for it. */
+/* hidden until JS confirms the left margin is wide enough to hold it;
+   top / height / width all come from JS so the stream can never reach the text */
+.pour { display: none; }
+
+/* opacity lives on the children, never on the wrapper: fading the whole block
+   would also fade the rail, and a 72% hairline never matches the solid one
+   the stats block draws. */
+.pour--on {
+  display: block;
+  position: absolute;
+  left: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+.pour__reveal { position: absolute; inset: 0; opacity: .72; }
+
+.mx-body  { fill: var(--navy); }
+.mx-drum  { fill: var(--peri); }
+.mx-chute { fill: var(--navy-700); }
+.mx-chute-lip { fill: var(--peri); opacity: .5; }
+.mx-glass { fill: var(--peri-bg); }
+.mx-hub   { fill: var(--peri-bg); }
+.mx-ribs  { stroke: var(--navy); stroke-width: 3.6; opacity: .42; }
+.pour__stream {
+  position: absolute; top: 0; left: 0;
+  /* stops short of the bottom so the puddle swallows its end */
+  width: 100%; height: calc(100% - 62px);
+}
+.pour__puddle {
+  position: absolute;
+  left: 16%; bottom: 10px;
+  width: clamp(300px, 34vw, 520px); max-width: none; height: auto;
+  transform: translateX(-44%);
+}
+
+/* the stream fills in progressively as the page is scrolled.
+   JS steps --pour-fill from 0 to 1; registering it as a <number> lets the
+   browser interpolate between steps, so the leading edge flows instead of jumping. */
+@property --pour-fill {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+.pour__marker { position: absolute; left: 0; width: 1px; height: 1px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .pour--on .pour__reveal {
+    --pour-fill: 0;
+    /* soft feathered tip instead of a hard cut */
+    -webkit-mask-image: linear-gradient(to bottom,
+      #000 calc(var(--pour-fill) * 100% - 1.6%),
+      transparent calc(var(--pour-fill) * 100% + 1.1%));
+    mask-image: linear-gradient(to bottom,
+      #000 calc(var(--pour-fill) * 100% - 1.6%),
+      transparent calc(var(--pour-fill) * 100% + 1.1%));
+    /* steps are small now, so this only smooths them: any slower and the tip
+       visibly trails the scroll instead of running with it */
+    transition: --pour-fill .45s var(--ease);
+  }
+  .js .pour--on .pour__puddle {
+    opacity: 0;
+    transform: translateX(-44%) scale(.7);
+    transform-origin: 62% 58%;
+    transition: transform .9s var(--ease), opacity .5s ease;
+  }
+  .js .pour--on.is-full .pour__puddle {
+    opacity: 1;
+    transform: translateX(-44%) scale(1);
+  }
+  /* the drum keeps turning: ribs travel one period along the barrel axis */
+  .mx-ribs__spin { animation: mxSpin 2.6s linear infinite; }
+}
+@keyframes mxSpin {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(13px, 1.4px); }
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 1000px) {
+  .nav { display: none; }
+  .site-header__actions { display: none; }
+  .burger { display: inline-flex; margin-left: auto; }
+  .hero { min-height: min(88vh, 620px); }
+  .hero__body { max-width: none; }
+  .about__grid { grid-template-columns: 1fr; }
+  .contacts__grid { grid-template-columns: 1fr; }
+  .cta-band__inner { grid-template-columns: 1fr; }
+  .site-footer__grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+
+@media (max-width: 680px) {
+  body { font-size: 16px; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  .stats__item { padding: 20px 14px 4px 0; }
+  .stats__item:nth-child(2) { border-right: 0; }
+  .stats__item:nth-child(-n+2) { border-bottom: 1px solid var(--line); padding-bottom: 20px; }
+  .stats dt { font-size: 1.3rem; }
+  .stats dd { max-width: none; }
+  .benefits { grid-template-columns: 1fr; }
+  .callout { grid-template-columns: 1fr; gap: 18px; }
+  .callout__mark svg { width: 54px; }
+  .compare__row { grid-template-columns: 40px 1fr; column-gap: 16px; }
+  .compare__note { grid-column: 1 / -1; }
+  .hero__bg::after { background: linear-gradient(178deg, rgba(11,19,50,.58) 0%, rgba(11,19,50,.74) 60%, rgba(11,19,50,.82) 100%); }
+  .hero__lead { font-size: 1.06rem; }
+  .projects { grid-template-columns: 1fr; }
+  .project img { height: 210px; }
+  .site-footer__grid { grid-template-columns: 1fr; }
+  .site-footer__bottom { flex-direction: column; gap: 6px; }
+}
+
+@media (max-width: 380px) {
+  .hero__cta { flex-direction: column; align-items: stretch; }
+  .hero__cta .btn { justify-content: center; }
+}
