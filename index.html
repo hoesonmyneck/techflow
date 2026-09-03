@@ -19,9 +19,14 @@
 <body>
 <a class="skip-link" href="#main">Перейти к содержанию</a>
 
-<!-- the logo links here, so it has to sit above the sticky header: inside
-     <main> it would stop one header height short of the top of the page -->
-<span id="top"></span>
+<!-- The logo links here, so it has to sit above the sticky header: inside
+     <main> it would stop one header height short of the top of the page.
+     A div, not a span: an empty inline element sits on a line box that the
+     spec says is "treated as not existing", and WebKit takes that literally
+     and generates no box for it, so Safari has no position to scroll to and
+     the link does nothing. A block box is always generated, even at zero
+     height. main.js scrolls to 0 outright on top of this. -->
+<div id="top" aria-hidden="true"></div>
 
 <header class="site-header" id="siteHeader">
   <div class="wrap site-header__inner">

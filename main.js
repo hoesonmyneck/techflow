@@ -39,6 +39,26 @@
   if (mq.addEventListener) mq.addEventListener("change", mqHandler);
   else if (mq.addListener) mq.addListener(mqHandler);
 
+  /* Logo -> the very top of the page. The href on its own is not enough on a
+     real iPhone: the fragment target has to have a generated box for Safari to
+     resolve it, and scroll-padding-top would otherwise park the jump one header
+     short of the top. Scrolling to 0 by hand lands on the true top on every
+     engine, and leaves the address bar clean instead of appending #top. The
+     href stays as the fallback for a new tab, a middle click, or no JS. */
+  var logo = document.querySelector(".logo");
+  if (logo) {
+    logo.addEventListener("click", function (e) {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+      e.preventDefault();
+      setMenu(false);
+      try {
+        window.scrollTo({ top: 0, left: 0 });
+      } catch (err) {
+        window.scrollTo(0, 0);   /* no options object: jump instead */
+      }
+    });
+  }
+
   /* scroll reveal */
   var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
   var revealAll = function () {
